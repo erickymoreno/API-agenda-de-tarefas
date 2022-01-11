@@ -1,10 +1,16 @@
 const express = require('express')
 const router = express.Router()
 
-const tasksController = require('./controllers/NoteController')
+const noteController = require('./controllers/NoteController')
+const userController = require('./controllers/UserController')
+
+// routes User
+router.post('/user', userController.register)
+router.get('/user', userController.listAll)
 
 
-router.get('/', tasksController.lista)
+// routes note
+router.get('/notes', noteController.lista)
 
 
 module.exports = router
