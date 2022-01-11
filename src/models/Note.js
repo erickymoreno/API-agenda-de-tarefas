@@ -1,29 +1,36 @@
 const mongoose = require('../connection')
 const Schema = mongoose.Schema
 
-const noteSchema = new Schema({
-    title:{
+const NoteSchema = new Schema({
+    title: {
         type: String,
         required: true
     },
-    description:{
+    description: {
         type: String,
         required: true
     },
-    createdAt:{
+    createdAt: {
         type: Date,
-        required: true
+        required: true,
+        default: Date.now
     },
-    updatedAt:{
+    updatedAt: {
         type: Date,
         required: false
     },
-    task:{
+    userId: {
+        type: String,
+        required: true,
+        select: false
+    },
+
+    task: {
         type: Array,
         required: false
     }
 })
 
-const Note = mongoose.model('Note', noteSchema)
+const Note = mongoose.model('Note', NoteSchema)
 
 module.exports = Note
