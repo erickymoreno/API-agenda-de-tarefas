@@ -9,7 +9,8 @@ router.post('/register', userController.register) // rota de cadastro
 router.post('/login', userController.authenticate)// rota para login
 router.get('/user', authMeddlewares, userController.listAll) // rota para testes
 
-// routes note
+// routes Note
+router.get('/note', authMeddlewares, noteController.listAll)
 router.post('/note', authMeddlewares, noteController.createNote)
 
 
