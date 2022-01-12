@@ -23,4 +23,26 @@ exports.createNote = (req, res) => {
         res.status(500)
         res.send({ message: erro.message})
     }
-}   
+}
+
+exports.listAll = (req, res) => {
+    try {
+        
+        const userId = req.userId
+
+        Note.find({ userId: userId}).then((date) => {
+    
+            if(date == false){
+                res.status(404)
+                res.send({ message: "Not Found" })
+            } else {
+                res.status(200)
+                res.send(date)
+            }
+        })
+
+    } catch (error) {
+        res.status(500)
+        res.send({ message: message.erro})
+    }
+}
