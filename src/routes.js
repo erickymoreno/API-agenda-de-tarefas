@@ -10,7 +10,7 @@ router.post('/login', userController.authenticate)// rota para login
 router.get('/user', authMeddlewares, userController.listAll) // rota para testes
 
 // routes note
-router.get('/notes', noteController.lista)
+router.post('/note', authMeddlewares, noteController.createNote)
 
 
 module.exports = router

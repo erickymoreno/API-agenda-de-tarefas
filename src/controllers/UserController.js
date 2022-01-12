@@ -11,9 +11,9 @@ exports.register = (req, res) => {
             password: req.body.password
         })
 
-        if (!user.email) {
+        if (!user) {
             res.status(400)
-            res.send({ message: "Email invalid" })
+            res.send({ message: "Date invalid" })
         } else {
             user.save((erro, date) => {
                 res.status(201)
@@ -56,6 +56,7 @@ exports.authenticate = async (req, res) => {
 
     } catch (erro) {
         res.status(500)
+        res.send({ message: erro.message })
     }
 }
 
