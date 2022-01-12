@@ -25,7 +25,7 @@ const NoteSchema = new Schema({
         select: false
     },
 
-    task: {
+    tasks: {
         type: Array,
         required: false
     }
