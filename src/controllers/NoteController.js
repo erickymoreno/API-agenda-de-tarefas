@@ -23,4 +23,4 @@ exports.createNote = (req, res) => {
         res.status(500)
         res.send({ message: erro.message})
     }
-}
+}   
