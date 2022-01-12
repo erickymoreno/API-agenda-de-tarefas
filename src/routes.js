@@ -12,6 +12,7 @@ router.get('/user', authMeddlewares, userController.listAll) // rota para testes
 // routes Note
 router.get('/note', authMeddlewares, noteController.listAll)
 router.post('/note', authMeddlewares, noteController.createNote)
+router.get('/note/:idNote', authMeddlewares, noteController.listTasks)
 
 
 module.exports = router

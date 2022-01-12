@@ -1,7 +1,7 @@
 const Note = require('../models/Note')
 
 exports.createNote = (req, res) => {
-    try{
+    try {
         const note = new Note({
             title: req.body.title,
             description: req.body.description,
@@ -9,7 +9,7 @@ exports.createNote = (req, res) => {
             userId: req.userId,
             updatedAt: Date.now()
         })
-    
+
         if (!note) {
             res.status(400)
             res.send({ message: "Date invalid" })
@@ -19,20 +19,20 @@ exports.createNote = (req, res) => {
                 res.send(note)
             })
         }
-    } catch(erro){
+    } catch (erro) {
         res.status(500)
-        res.send({ message: erro.message})
+        res.send({ message: erro.message })
     }
 }
 
 exports.listAll = (req, res) => {
     try {
-        
+
         const userId = req.userId
 
-        Note.find({ userId: userId}).then((date) => {
-    
-            if(date == false){
+        Note.find({ userId: userId }).then((date) => {
+
+            if (date == false) {
                 res.status(404)
                 res.send({ message: "Not Found" })
             } else {
@@ -43,6 +43,26 @@ exports.listAll = (req, res) => {
 
     } catch (error) {
         res.status(500)
-        res.send({ message: message.erro})
+        res.send({ message: erro.message })
+    }
+}
+
+exports.listTasks = (req, res) => {
+    try {
+        const idNote = req.params.idNote
+
+        Note.findById(idNote).then((date) => {
+            if (date == false) {
+                res.status(404)
+                res.send({ message: 'Not Found' })
+            } else {
+                res.status(200)
+                res.send(date.tasks)
+            }
+        })
+
+    } catch (erro) {
+        res.status(500)
+        res.send({ message: erro.message })
     }
 }
