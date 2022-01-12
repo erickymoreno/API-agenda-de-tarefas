@@ -66,3 +66,31 @@ exports.listTasks = (req, res) => {
         res.send({ message: erro.message })
     }
 }
+
+exports.addTask = (req, res) => {
+    try {
+        const idNote = req.params.idNote
+        const task = req.body
+        task.createdAt = new Date()
+        task.updateAt = new Date()
+        
+        Note.findById(idNote).then((note) => {
+
+            if (note == false) {
+                res.status(404)
+                res.send({ message: 'Note not found' })
+            } else {
+
+                note.tasks.push(task)
+
+                note.save((erro) => {
+                    res.status(201)
+                    res.send(task)
+                })
+            }
+        })
+    } catch (error) {
+        res.status(500)
+        res.send({ message: error.message })
+    }
+}
