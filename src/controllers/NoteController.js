@@ -131,7 +131,7 @@ exports.updateTask = (req, res) => {
             const tasks = note.tasks
 
             tasks.forEach((task) => {
-                if (Date.parse(task.createdAt) === taskCreatedAt) {
+                if (Date.parse(new Date(task.createdAt)) === taskCreatedAt) {
 
                     if (task.title != newTask.title && newTask.title != undefined) { task.title = newTask.title }
 
@@ -178,6 +178,45 @@ exports.deleteNote = (req, res) => {
         })
     } catch (erro) {
         res.status(500)
-        res.send({ message: erro.message})
+        res.send({ message: erro.message })
+    }
+}
+
+exports.deleteTask = (req, res) => {
+    try {
+        const idNote = req.params.idNote
+        const taskCreatedAt = Date.parse(new Date(req.params.dateCreatedAt))
+        let aux = false
+
+        Note.findById(idNote).then((note) => {
+            const tasks = note.tasks
+
+            tasks.forEach((task) => {
+
+                if (Date.parse(new Date(task.createdAt)) === taskCreatedAt) {
+
+                    const index = tasks.findIndex((task) => Date.parse(new Date(task.createdAt)) == taskCreatedAt)
+                    tasks.splice(index)
+
+                    Note.findByIdAndUpdate(idNote, note).then(() => {
+                        Note.findById(idNote).then((note) => {
+                            res.status(200)
+                            res.send(note)
+                        })
+                    })
+
+                    aux = true
+                }
+            })
+        }).then(() => {
+            if (aux === false) {
+                res.status(404)
+                res.send({ message: 'Task Not Found' })
+            }
+        })
+
+    } catch (erro) {
+        res.send(500)
+        res.send({ message: erro.message })
     }
 }
