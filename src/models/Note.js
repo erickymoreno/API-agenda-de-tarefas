@@ -13,7 +13,8 @@ const NoteSchema = new Schema({
     createdAt: {
         type: Date,
         required: true,
-        default: Date.now
+        unique: true,
+        default: new Date()
     },
     updatedAt: {
         type: Date,
