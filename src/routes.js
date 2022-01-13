@@ -14,6 +14,7 @@ router.get('/note', authMeddlewares, noteController.listAll)
 router.post('/note', authMeddlewares, noteController.createNote)
 router.get('/note/:idNote', authMeddlewares, noteController.listTasks)
 router.post('/note/:idNote', authMeddlewares, noteController.addTask)
+router.patch('/note/:idNote', authMeddlewares, noteController.updateNote)
 
 
 module.exports = router

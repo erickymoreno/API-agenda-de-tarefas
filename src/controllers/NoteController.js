@@ -73,7 +73,7 @@ exports.addTask = (req, res) => {
         const task = req.body
         task.createdAt = new Date()
         task.updateAt = new Date()
-        
+
         Note.findById(idNote).then((note) => {
 
             if (note == false) {
@@ -89,6 +89,28 @@ exports.addTask = (req, res) => {
                 })
             }
         })
+    } catch (error) {
+        res.status(500)
+        res.send({ message: error.message })
+    }
+}
+
+exports.updateNote = (req, res) => {
+    try {
+        const idNote = req.params.idNote
+        const note = req.body
+
+        note.updatedAt = new Date()
+        Note.findByIdAndUpdate(idNote, note).then((note) => {
+            if (note == false) {
+                res.status(404)
+                res.send({ message: "Note invalid" })
+            } else {
+                res.status(200)
+                res.send(note)
+            }
+        })
+
     } catch (error) {
         res.status(500)
         res.send({ message: error.message })
