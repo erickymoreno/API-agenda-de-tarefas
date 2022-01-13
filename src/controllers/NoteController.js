@@ -146,7 +146,7 @@ exports.updateTask = (req, res) => {
                             res.send(note)
                         })
                     })
-                    
+
                     aux = true
                 }
             })
@@ -160,5 +160,24 @@ exports.updateTask = (req, res) => {
     } catch (erro) {
         res.status(500)
         res.send({ message: erro.message })
+    }
+}
+
+exports.deleteNote = (req, res) => {
+    try {
+        const idNote = req.params.idNote
+
+        Note.findByIdAndDelete(idNote).then((note) => {
+            if (note) {
+                res.status(200)
+                res.send({ message: "Note successfully deleted" })
+            } else {
+                res.status(404)
+                res.send({ message: "Note not found" })
+            }
+        })
+    } catch (erro) {
+        res.status(500)
+        res.send({ message: erro.message})
     }
 }
