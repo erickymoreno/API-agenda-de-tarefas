@@ -17,7 +17,8 @@ const NoteSchema = new Schema({
     },
     updatedAt: {
         type: Date,
-        required: false
+        required: true,
+        default: Date.now
     },
     userId: {
         type: String,
