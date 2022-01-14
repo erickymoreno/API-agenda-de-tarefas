@@ -67,6 +67,26 @@ exports.listTasks = (req, res) => {
     }
 }
 
+exports.listNoteId = (req, res) => {
+    try {
+        const idNote = req.params.idNote
+
+        Note.findById(idNote, (erro, note) => {
+
+            if (erro) {
+                res.status(404)
+                res.send({ message: "Note not found" })
+            } else {
+                res.status(200)
+                res.send(note)
+            }
+        })
+    } catch (error) {
+        res.status(500)
+        res.send({ message: error.message })
+    }
+}
+
 exports.addTask = (req, res) => {
     try {
         const idNote = req.params.idNote
