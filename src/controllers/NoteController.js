@@ -1,14 +1,24 @@
 const Note = require('../models/Note')
+const {v4 : uuidv4} =  require('uuid')
 
 exports.createNote = (req, res) => {
     try {
         const note = new Note({
             title: req.body.title,
             description: req.body.description,
-            tasks: req.body.tasks,
             userId: req.userId,
+            createdAt:  Date.now(),
             updatedAt: Date.now()
         })
+        
+        const tasks =  req.body.tasks
+        tasks.forEach(task => {
+            task.id = uuidv4()
+            task.createdAt = new Date(Date.now())
+            task.updatedAt = new Date()
+        })
+        
+        note.tasks = tasks
 
         if (!note) {
             res.status(400)
