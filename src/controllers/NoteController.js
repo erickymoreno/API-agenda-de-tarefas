@@ -1,5 +1,5 @@
 const Note = require('../models/Note')
-const {v4 : uuidv4} =  require('uuid')
+const { v4: uuidv4 } = require('uuid')
 
 exports.createNote = (req, res) => {
     try {
@@ -7,17 +7,17 @@ exports.createNote = (req, res) => {
             title: req.body.title,
             description: req.body.description,
             userId: req.userId,
-            createdAt:  Date.now(),
+            createdAt: Date.now(),
             updatedAt: Date.now()
         })
-        
-        const tasks =  req.body.tasks
+
+        const tasks = req.body.tasks
         tasks.forEach(task => {
             task.id = uuidv4()
             task.createdAt = new Date(Date.now())
             task.updatedAt = new Date()
         })
-        
+
         note.tasks = tasks
 
         if (!note) {
@@ -104,6 +104,7 @@ exports.addTask = (req, res) => {
 
         task.createdAt = new Date()
         task.updatedAt = new Date()
+        task.id = uuidv4()
 
         Note.findById(idNote).then((note) => {
 
@@ -153,7 +154,7 @@ exports.updateTask = (req, res) => {
 
     try {
         const idNote = req.params.idNote
-        const taskCreatedAt = Date.parse(new Date(req.params.dateCreatedAt))
+        const idTask = req.params.idTask
         const newTask = req.body
         let aux = false
 
@@ -161,7 +162,7 @@ exports.updateTask = (req, res) => {
             const tasks = note.tasks
 
             tasks.forEach((task) => {
-                if (Date.parse(new Date(task.createdAt)) === taskCreatedAt) {
+                if (task.id === idTask) {
 
                     if (task.title != newTask.title && newTask.title != undefined) { task.title = newTask.title }
 
@@ -215,33 +216,37 @@ exports.deleteNote = (req, res) => {
 exports.deleteTask = (req, res) => {
     try {
         const idNote = req.params.idNote
-        const taskCreatedAt = Date.parse(new Date(req.params.dateCreatedAt))
+        const idTask = req.params.idTask
         let aux = false
 
-        Note.findById(idNote).then((note) => {
-            const tasks = note.tasks
-
-            tasks.forEach((task) => {
-
-                if (Date.parse(new Date(task.createdAt)) === taskCreatedAt) {
-
-                    const index = tasks.findIndex((task) => Date.parse(new Date(task.createdAt)) == taskCreatedAt)
-                    tasks.splice(index)
-
-                    Note.findByIdAndUpdate(idNote, note).then(() => {
-                        Note.findById(idNote).then((note) => {
-                            res.status(200)
-                            res.send(note)
-                        })
-                    })
-
-                    aux = true
-                }
-            })
-        }).then(() => {
-            if (aux === false) {
+        Note.findById(idNote,(erro, note) => {
+            if (erro) {
                 res.status(404)
-                res.send({ message: 'Task Not Found' })
+                res.send({ message: "Note not found" })
+            } else {
+                const tasks = note.tasks
+                tasks.forEach((task) => {
+
+                    if (task.id === idTask) {
+                        const index = tasks.findIndex((task) => task.id === idTask)
+                        tasks.splice(index)
+
+                        Note.findByIdAndUpdate(idNote, note).then(() => {
+                            Note.findById(idNote).then((note) => {
+                                res.status(200)
+                                res.send(note)
+                            })
+                        })
+
+                        aux = true
+                    }
+                })
+                    if (aux === false) {
+                        res.status(404)
+                        res.send({ message: 'Task Not Found' })
+                    }
+                
+                
             }
         })
 

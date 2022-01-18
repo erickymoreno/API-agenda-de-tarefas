@@ -16,10 +16,10 @@ router.get('/note/:idNote', authMeddlewares, noteController.listNoteId)
 router.patch('/note/:idNote', authMeddlewares, noteController.updateNote)
 router.delete('/note/:idNote', authMeddlewares, noteController.deleteNote)
 
-// Routes tasks
+// Routes task
 router.get('/note/:idNote/task', authMeddlewares, noteController.listTasks)
 router.post('/note/:idNote', authMeddlewares, noteController.addTask)
-router.patch('/note/:idNote/:dateCreatedAt', authMeddlewares, noteController.updateTask)
-router.delete('/note/:idNote/:dateCreatedAt', authMeddlewares, noteController.deleteTask)
+router.patch('/note/:idNote/:idTask', authMeddlewares, noteController.updateTask)
+router.delete('/note/:idNote/:idTask', authMeddlewares, noteController.deleteTask)
 
 module.exports = router
