@@ -3,6 +3,12 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
 
+function generateToken(params = {}){
+    return jwt.sign(params, process.env.SECRET_KEY,{
+        expiresIn: 82800
+    })
+}
+
 exports.register = (req, res) => {
     try {
         const user = new User({
@@ -25,12 +31,6 @@ exports.register = (req, res) => {
         res.status(500)
         res.send({ message: erro.message })
     }
-}
-
-function generateToken(params = {}){
-    return jwt.sign(params, process.env.SECRET_KEY,{
-        expiresIn: 3600
-    })
 }
 
 exports.authenticate = async (req, res) => {
