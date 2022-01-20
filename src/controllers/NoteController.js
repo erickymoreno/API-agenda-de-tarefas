@@ -57,26 +57,6 @@ exports.listAll = (req, res) => {
     }
 }
 
-exports.listTasks = (req, res) => {
-    try {
-        const idNote = req.params.idNote
-
-        Note.findById(idNote).then((date) => {
-            if (date == false) {
-                res.status(404)
-                res.send({ message: 'Not Found' })
-            } else {
-                res.status(200)
-                res.send(date.tasks)
-            }
-        })
-
-    } catch (erro) {
-        res.status(500)
-        res.send({ message: erro.message })
-    }
-}
-
 exports.listNoteId = (req, res) => {
     try {
         const idNote = req.params.idNote
@@ -94,6 +74,48 @@ exports.listNoteId = (req, res) => {
     } catch (error) {
         res.status(500)
         res.send({ message: error.message })
+    }
+}
+
+exports.updateNote = (req, res) => {
+    try {
+        const idNote = req.params.idNote
+        const note = req.body
+
+        note.updatedAt = new Date()
+
+        Note.findByIdAndUpdate(idNote, note).then((note) => {
+            if (note == false) {
+                res.status(404)
+                res.send({ message: "Note invalid" })
+            } else {
+                res.status(200)
+                res.send(note)
+            }
+        })
+
+    } catch (error) {
+        res.status(500)
+        res.send({ message: error.message })
+    }
+}
+
+exports.deleteNote = (req, res) => {
+    try {
+        const idNote = req.params.idNote
+
+        Note.findByIdAndDelete(idNote).then((note) => {
+            if (note) {
+                res.status(200)
+                res.send({ message: "Note successfully deleted" })
+            } else {
+                res.status(404)
+                res.send({ message: "Note not found" })
+            }
+        })
+    } catch (erro) {
+        res.status(500)
+        res.send({ message: erro.message })
     }
 }
 
@@ -127,26 +149,23 @@ exports.addTask = (req, res) => {
     }
 }
 
-exports.updateNote = (req, res) => {
+exports.listTasks = (req, res) => {
     try {
         const idNote = req.params.idNote
-        const note = req.body
 
-        note.updatedAt = new Date()
-
-        Note.findByIdAndUpdate(idNote, note).then((note) => {
-            if (note == false) {
+        Note.findById(idNote).then((date) => {
+            if (date == false) {
                 res.status(404)
-                res.send({ message: "Note invalid" })
+                res.send({ message: 'Not Found' })
             } else {
                 res.status(200)
-                res.send(note)
+                res.send(date.tasks)
             }
         })
 
-    } catch (error) {
+    } catch (erro) {
         res.status(500)
-        res.send({ message: error.message })
+        res.send({ message: erro.message })
     }
 }
 
@@ -194,32 +213,13 @@ exports.updateTask = (req, res) => {
     }
 }
 
-exports.deleteNote = (req, res) => {
-    try {
-        const idNote = req.params.idNote
-
-        Note.findByIdAndDelete(idNote).then((note) => {
-            if (note) {
-                res.status(200)
-                res.send({ message: "Note successfully deleted" })
-            } else {
-                res.status(404)
-                res.send({ message: "Note not found" })
-            }
-        })
-    } catch (erro) {
-        res.status(500)
-        res.send({ message: erro.message })
-    }
-}
-
 exports.deleteTask = (req, res) => {
     try {
         const idNote = req.params.idNote
         const idTask = req.params.idTask
         let aux = false
 
-        Note.findById(idNote,(erro, note) => {
+        Note.findById(idNote, (erro, note) => {
             if (erro) {
                 res.status(404)
                 res.send({ message: "Note not found" })
@@ -241,12 +241,10 @@ exports.deleteTask = (req, res) => {
                         aux = true
                     }
                 })
-                    if (aux === false) {
-                        res.status(404)
-                        res.send({ message: 'Task Not Found' })
-                    }
-                
-                
+                if (aux === false) {
+                    res.status(404)
+                    res.send({ message: 'Task Not Found' })
+                }
             }
         })
 

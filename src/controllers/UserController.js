@@ -3,6 +3,12 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
 
+function generateToken(params = {}){
+    return jwt.sign(params, process.env.SECRET_KEY,{
+        expiresIn: 82800
+    })
+}
+
 exports.register = (req, res) => {
     try {
         const user = new User({
@@ -27,33 +33,27 @@ exports.register = (req, res) => {
     }
 }
 
-function generateToken(params = {}){
-    return jwt.sign(params, process.env.SECRET_KEY,{
-        expiresIn: 3600
-    })
-}
-
 exports.authenticate = async (req, res) => {
     try {
         const email = req.body.email
         const password = req.body.password
-
+        
         const user = await User.findOne({ email: email }).select('+password')
-
+        
         if (!user) {
             res.status(400)
             res.send({ message: "User not found" })
         }
-
+        
         if (!await bcrypt.compare(password, user.password)) {
             res.status(400)
             res.send({ message: "Invalid password" })
         }
-
+        
         user.password = undefined
         
         res.send({user, token: generateToken({id: user.id})})
-
+        
     } catch (erro) {
         res.status(500)
         res.send({ message: erro.message })
@@ -71,4 +71,3 @@ exports.listAll = (req, res) => {
         res.send({ message: erro.message })
     }
 }
-
